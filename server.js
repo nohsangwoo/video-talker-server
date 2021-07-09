@@ -66,4 +66,16 @@ io.on('connection', socket => {
       activeUsers: peers,
     });
   });
+
+  // listners related with direct call
+  // 전화를 걸거나 받을때 첫번째 단계를 구현
+  socket.on('pre-offer', data => {
+    console.log('pre-offer handled');
+    // io.to 귓솔말 같은거임 해당 socketId로만 내용을 전달 하겠다(맨처음 누구에게 전화를 걸것인지 해당 유저에게 알려야 하니깐)
+    io.to(data.callee.socketId).emit('pre-offer', {
+      callerUsername: data.caller.username,
+      // 지금 내용을 전달하라고 트리거를 건들인 socket의 id이다
+      callerSocketId: socket.id,
+    });
+  });
 });
