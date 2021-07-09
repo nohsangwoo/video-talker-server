@@ -78,4 +78,11 @@ io.on('connection', socket => {
       callerSocketId: socket.id,
     });
   });
+
+  // 2단계에서 callee가 전화를 수락했는지 거절했는지에대한 정보를 caller에게 전달
+  socket.on('pre-offer-answer', data => {
+    io.to(data.callerSocketId).emit('pre-offer-answer', {
+      answer: data.answer,
+    });
+  });
 });
