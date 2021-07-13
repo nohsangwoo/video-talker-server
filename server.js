@@ -85,4 +85,25 @@ io.on('connection', socket => {
       answer: data.answer,
     });
   });
+
+  socket.on('webRTC-offer', data => {
+    console.log('hadling webRTC offer');
+    io.to(data.calleeSocketId).emit('webRTC-offer', {
+      offer: data.offer,
+    });
+  });
+
+  socket.on('webRTC-answer', data => {
+    console.log('handling webRTC answer');
+    io.to(data.callerSocektId).emit('webRTC-answer', {
+      answer: data.answer,
+    });
+  });
+
+  socket.on('webRTC-candidate', data => {
+    console.log('handling ice candidate');
+    io.to(data.connectedUserSocketId).emit('webRTC-candidate', {
+      candidate: data.candidate,
+    });
+  });
 });
