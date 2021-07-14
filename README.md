@@ -4,3 +4,5 @@
 
 - https://github.com/peers/peerjs-server
 - npm install --save peer
+
+# connecting with front server
