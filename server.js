@@ -1,5 +1,7 @@
 const express = require('express');
 const socket = require('socket.io');
+const { ExpressPeerServer } = require('peer');
+const groupCallHandler = require('./groupCallHandler');
 
 const PORT = 5000;
 
@@ -9,6 +11,14 @@ const server = app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}`);
   console.log(`http://localhost:${PORT}`);
 });
+
+const peerServer = ExpressPeerServer(server, {
+  debug: true,
+});
+
+app.use('/peerjs', peerServer);
+
+groupCallHandler.createPeerServerListeners(peerServer);
 
 const io = socket(server, {
   cors: {
@@ -88,5 +98,10 @@ io.on('connection', socket => {
     io.to(data.connectedUserSocketId).emit('webRTC-candidate', {
       candidate: data.candidate,
     });
+  });
+
+  socket.on('user-hanged-up', data => {
+    console.log('handling user hanged up');
+    io.to(data.connectedUserSocketId).emit('user-hanged-up');
   });
 });
