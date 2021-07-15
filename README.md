@@ -6,3 +6,5 @@
 - npm install --save peer
 
 # connecting with front server
+
+# sending active rooms to all client

@@ -53,6 +53,11 @@ io.on('connection', socket => {
       event: broadcastEventTypes.ACTIVE_USERS,
       activeUsers: peers,
     });
+
+    io.sockets.emit('broadcast', {
+      event: broadcastEventTypes.GROUP_CALL_ROOMS,
+      groupCallRooms,
+    });
   });
 
   socket.on('disconnect', () => {
@@ -120,7 +125,11 @@ io.on('connection', socket => {
       roomId: roomId,
     };
 
-    groupCallRooms.push(newGroupCallRoom);
-    console.log(groupCallRooms);
+    groupCallRooms = [...groupCallRooms, newGroupCallRoom];
+    io.sockets.emit('broadcast', {
+      event: broadcastEventTypes.GROUP_CALL_ROOMS,
+      groupCallRooms,
+    });
+    console.log('groupCallRooms', groupCallRooms);
   });
 });
