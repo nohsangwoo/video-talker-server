@@ -132,4 +132,21 @@ io.on('connection', socket => {
     });
     console.log('groupCallRooms', groupCallRooms);
   });
+
+  socket.on('group-call-join-request', data => {
+    io.to(data.roomId).emit('group-call-join-request', {
+      peerId: data.peerId,
+      streamId: data.streamId,
+    });
+
+    socket.join(data.roomId);
+  });
+
+  socket.on('group-call-user-left', data => {
+    socket.leave(data.roomId);
+
+    io.to(data.roomId).emit('group-call-user-left', {
+      streamId: data.streamId,
+    });
+  });
 });
