@@ -1,10 +1,20 @@
 // const twilio = require('twilio');
 const express = require('express');
 const socket = require('socket.io');
-const cors = require("cors");
+const cors = require('cors');
 const { ExpressPeerServer } = require('peer');
 const groupCallHandler = require('./groupCallHandler');
 const { v4: uuidv4 } = require('uuid');
+
+require('dotenv').config();
+console.log('CLIENT_URL:', process.env.CLIENT_URL);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+const setUrl =
+  process.env.NODE_ENV === 'dev'
+    ? 'http://localhost:3000'
+    : process.env.CLIENT_URL;
+
+console.log('setUrl', setUrl);
 
 // 호스트에 접속할 포트번호 지정
 const PORT = 5000;
@@ -26,7 +36,7 @@ app.get('/', (req, res) => {
 //   client.tokens.create().then(token => res.send({ token }));
 // });
 
-// 서버 동작시키는 상용구 
+// 서버 동작시키는 상용구
 const server = app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}`);
   console.log(`http://localhost:${PORT}`);
@@ -40,12 +50,12 @@ app.use('/peerjs', peerServer);
 
 groupCallHandler.createPeerServerListeners(peerServer);
 
-
 // socket.io를 사용하기위한 소켓 설정
 const io = socket(server, {
   // cors옵션을 따로해줌
   cors: {
-    origin: '*',
+    // origin: '*',
+    origin: setUrl,
     methods: ['GET', 'POST'],
   },
 });
@@ -57,7 +67,6 @@ const broadcastEventTypes = {
   ACTIVE_USERS: 'ACTIVE_USERS',
   GROUP_CALL_ROOMS: 'GROUP_CALL_ROOMS',
 };
-
 
 // io connection은 클라이언트와 연결관계가 이어지면 자동으로 실행됨
 io.on('connection', socket => {

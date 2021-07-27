@@ -15,6 +15,10 @@
 
 ## group Calls minor change
 
+## npm install dotenv
+
+- dotEnv사용하기 위한 작업
+
 ## cors설정
 
 ## fix package.json
