@@ -22,3 +22,5 @@
 ## cors설정
 
 ## fix package.json
+
+## fix bugs

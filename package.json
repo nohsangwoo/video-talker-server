@@ -1,11 +1,11 @@
 {
   "name": "video-talker-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "server",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=prod nodemon index.js",
-    "dev": "NODE_ENV=dev nodemon index.js",
+    "start": "NODE_ENV=prod nodemon server.js",
+    "dev": "NODE_ENV=dev nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
