@@ -1,13 +1,32 @@
+// const twilio = require('twilio');
 const express = require('express');
 const socket = require('socket.io');
+const cors = require("cors");
 const { ExpressPeerServer } = require('peer');
 const groupCallHandler = require('./groupCallHandler');
 const { v4: uuidv4 } = require('uuid');
 
+// 호스트에 접속할 포트번호 지정
 const PORT = 5000;
 
+// express 사용법 상용구
 const app = express();
 
+app.use(cors());
+
+app.get('/', (req, res) => {
+  res.send({ api: 'video-talker-api' });
+});
+
+// app.get('/api/get-turn-credentials', (req, res) => {
+//   const accountSid = '';
+//   const authToken = '';
+//   const client = twilio();
+
+//   client.tokens.create().then(token => res.send({ token }));
+// });
+
+// 서버 동작시키는 상용구 
 const server = app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}`);
   console.log(`http://localhost:${PORT}`);
@@ -21,7 +40,10 @@ app.use('/peerjs', peerServer);
 
 groupCallHandler.createPeerServerListeners(peerServer);
 
+
+// socket.io를 사용하기위한 소켓 설정
 const io = socket(server, {
+  // cors옵션을 따로해줌
   cors: {
     origin: '*',
     methods: ['GET', 'POST'],
@@ -36,6 +58,8 @@ const broadcastEventTypes = {
   GROUP_CALL_ROOMS: 'GROUP_CALL_ROOMS',
 };
 
+
+// io connection은 클라이언트와 연결관계가 이어지면 자동으로 실행됨
 io.on('connection', socket => {
   socket.emit('connection', null);
   console.log('new user connected');
